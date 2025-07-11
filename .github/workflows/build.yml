@@ -9,7 +9,7 @@ on:
       - main
   schedule:
     # daily at 07:20 UTC
-    - cron: "20 07 * * *"
+    - cron: "20 07 * * 0"
   # allow manual triggering of workflow
   workflow_dispatch:
 
