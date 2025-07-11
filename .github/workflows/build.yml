@@ -1,0 +1,33 @@
+name: 'Build notebook'
+
+env:
+    PYTHON-VERSION: "3.12"
+
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    # daily at 07:20 UTC
+    - cron: "20 07 * * *"
+  # allow manual triggering of workflow
+  workflow_dispatch:
+
+jobs:
+    preprocess-execute-convert:
+      runs-on: ubuntu-latest
+      if: ${{ github.repository != 'astropy-learn/tutorial--template' }}
+      permissions:
+        contents: write
+      steps:
+        - name: Call custom action to pre-process config files
+          id: pre-process
+          uses: astropy-learn/action--pre-process@main
+          with:
+            python-version: ${{ env.PYTHON-VERSION }}
+
+        - name: Call custom action to execute and convert notebook
+          uses: astropy-learn/action--execute-convert@main
+          with:
+            python-version: ${{ env.PYTHON-VERSION }}
+            tutorial-slug: ${{ steps.pre-process.outputs.tutorial-slug }}
